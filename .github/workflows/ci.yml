@@ -1,0 +1,49 @@
+  on:
+  jobs:name: CI - End-to-End Testing (Example 4)
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Set up Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Install Playwright browsers
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      # 5. Start application with Docker Compose
+      - name: Start services
+        run: docker compose up -d --build
+
+      # 6. Wait for services to be ready
+      - name: Wait for services
+        run: sleep 20
+
+      # 7. Run Playwright tests
+      - name: Run Playwright tests
+        run: npx playwright test
+
+      # 8. Stop containers
+      - name: Stop services
+        if: always()
+        run: docker compose down
