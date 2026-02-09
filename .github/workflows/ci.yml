@@ -1,5 +1,4 @@
-  on:
-  jobs:name: CI - End-to-End Testing (Example 4)
+name: CI - End-to-End Testing (Example 4)
 
 on:
   push:
@@ -43,7 +42,7 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 
-      # 8. Stop containers
+      # 8. Stop containers (always run)
       - name: Stop services
         if: always()
         run: docker compose down
